@@ -1,0 +1,23 @@
+# Local publisher state; keep this file available between publishes.
+/.az-pricing-updates-publish-state.json
+
+# Python environments and caches
+/.venv/
+/venv/
+__pycache__/
+*.py[cod]
+/.pytest_cache/
+/.coverage
+/htmlcov/
+
+# Local inputs, caches, reports and credentials
+/inputs/
+/data/
+/cache/
+/reports/
+/test_output/
+*.csv
+*.parquet
+*.xlsx
+.env
+.env.*

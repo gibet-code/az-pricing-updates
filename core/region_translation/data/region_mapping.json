@@ -1,0 +1,1154 @@
+{
+  "asiapacific": {
+    "meterRegion": null,
+    "displayName": "Asia Pacific",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "australia": {
+    "meterRegion": null,
+    "displayName": "Australia",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "australiacentral": {
+    "meterRegion": "AU Central",
+    "displayName": "Australia Central",
+    "armLocationAliases": [
+      "aucentral",
+      "australiac"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cbr"
+    ]
+  },
+  "australiacentral2": {
+    "meterRegion": "AU Central 2",
+    "displayName": "Australia Central 2",
+    "armLocationAliases": [
+      "aucentral2",
+      "australiac2"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "canberra2",
+      "cbr2"
+    ]
+  },
+  "australiaeast": {
+    "meterRegion": "AU East",
+    "displayName": "Australia East",
+    "armLocationAliases": [
+      "aue",
+      "aueast",
+      "australia_east",
+      "eau"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "sy",
+      "syd",
+      "sydney"
+    ]
+  },
+  "australiasoutheast": {
+    "meterRegion": "AU Southeast",
+    "displayName": "Australia Southeast",
+    "armLocationAliases": [
+      "ausoutheast"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "melbourne",
+      "ml",
+      "seau"
+    ]
+  },
+  "austriaeast": {
+    "meterRegion": "AT East",
+    "displayName": "Austria East",
+    "armLocationAliases": [
+      "austriae"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "ate"
+    ]
+  },
+  "azurestack": {
+    "meterRegion": null,
+    "displayName": "Azure Stack",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "belgiumcentral": {
+    "meterRegion": "BE Central",
+    "displayName": "Belgium Central",
+    "armLocationAliases": [
+      "bec",
+      "belgiumc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "brazilsouth": {
+    "meterRegion": "BR South",
+    "displayName": "Brazil South",
+    "armLocationAliases": [
+      "brsouth",
+      "bso",
+      "sbr"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cq",
+      "sao paulo",
+      "saopaulo",
+      "sao paulo state"
+    ]
+  },
+  "brazilsoutheast": {
+    "meterRegion": "BR Southeast",
+    "displayName": "Brazil Southeast",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "brazilse",
+      "brse"
+    ]
+  },
+  "canadacentral": {
+    "meterRegion": "CA Central",
+    "displayName": "Canada Central",
+    "armLocationAliases": [
+      "cac",
+      "cacentral",
+      "cc",
+      "centralcanada"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "canandacentral",
+      "toronto",
+      "yt"
+    ]
+  },
+  "canadaeast": {
+    "meterRegion": "CA East",
+    "displayName": "Canada East",
+    "armLocationAliases": [
+      "cae",
+      "caeast",
+      "eastcanada"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "montreal",
+      "quebeccity",
+      "yq"
+    ]
+  },
+  "centralindia": {
+    "meterRegion": "IN Central",
+    "displayName": "Central India",
+    "armLocationAliases": [
+      "inc",
+      "incentral",
+      "indiacentral"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "pn"
+    ]
+  },
+  "centralus": {
+    "meterRegion": "US Central",
+    "displayName": "Central US",
+    "armLocationAliases": [
+      "cu",
+      "cus",
+      "uscentral"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "dm",
+      "iowa"
+    ]
+  },
+  "centraluseuap": {
+    "meterRegion": null,
+    "displayName": "Central US EUAP",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "chilecentral": {
+    "meterRegion": "CL Central",
+    "displayName": "Chile Central",
+    "armLocationAliases": [
+      "chilec"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "clc"
+    ]
+  },
+  "chinaeast": {
+    "meterRegion": "CN East",
+    "displayName": "China East",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "sh"
+    ]
+  },
+  "chinaeast2": {
+    "meterRegion": "CN East 2",
+    "displayName": "China East 2",
+    "armLocationAliases": [
+      "chinae2"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "sha"
+    ]
+  },
+  "chinaeast3": {
+    "meterRegion": "CN East 3",
+    "displayName": "China East 3",
+    "armLocationAliases": [
+      "chinae3"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cne3"
+    ]
+  },
+  "chinanorth": {
+    "meterRegion": "CN North",
+    "displayName": "China North",
+    "armLocationAliases": [
+      "chnorth"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "bj"
+    ]
+  },
+  "chinanorth2": {
+    "meterRegion": "CN North 2",
+    "displayName": "China North 2",
+    "armLocationAliases": [
+      "chinan2"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "bjs"
+    ]
+  },
+  "chinanorth3": {
+    "meterRegion": "CN North 3",
+    "displayName": "China North 3",
+    "armLocationAliases": [
+      "chinan3"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cnn3"
+    ]
+  },
+  "denmarkeast": {
+    "meterRegion": "DK East",
+    "displayName": "Denmark East",
+    "armLocationAliases": [
+      "denmarke"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "dke"
+    ]
+  },
+  "eastasia": {
+    "meterRegion": "AP East",
+    "displayName": "East Asia",
+    "armLocationAliases": [
+      "ase",
+      "asiaeast",
+      "ea",
+      "eas",
+      "east_asia"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "apeast",
+      "hk",
+      "hkg",
+      "hong kong",
+      "hongkong"
+    ]
+  },
+  "eastus": {
+    "meterRegion": "US East",
+    "displayName": "East US",
+    "armLocationAliases": [
+      "eu",
+      "eus",
+      "us_east",
+      "useast"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "bl"
+    ]
+  },
+  "eastus2": {
+    "meterRegion": "US East 2",
+    "displayName": "East US 2",
+    "armLocationAliases": [
+      "eu2",
+      "eus2",
+      "us2",
+      "useast2"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "bn",
+      "eastsu2"
+    ]
+  },
+  "eastus2euap": {
+    "meterRegion": null,
+    "displayName": "East US 2 EUAP",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "eastus3": {
+    "meterRegion": "US East 3",
+    "displayName": "East US 3",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "eastusstg": {
+    "meterRegion": "East US STG",
+    "displayName": "East US STG",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "finlandcentral": {
+    "meterRegion": "FI Central",
+    "displayName": "Finland Central",
+    "armLocationAliases": [
+      "finlandc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "flc"
+    ]
+  },
+  "francecentral": {
+    "meterRegion": "FR Central",
+    "displayName": "France Central",
+    "armLocationAliases": [
+      "francec",
+      "frc",
+      "frcentral"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "par",
+      "paris"
+    ]
+  },
+  "francesouth": {
+    "meterRegion": "FR South",
+    "displayName": "France South",
+    "armLocationAliases": [
+      "frances",
+      "frsouth"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "mrs"
+    ]
+  },
+  "germanycentral": {
+    "meterRegion": "DE Central",
+    "displayName": "Germany Central",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "decentral",
+      "fr"
+    ]
+  },
+  "germanynorth": {
+    "meterRegion": "DE North",
+    "displayName": "Germany North",
+    "armLocationAliases": [
+      "germanyn"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "den"
+    ]
+  },
+  "germanynortheast": {
+    "meterRegion": "DE Northeast",
+    "displayName": "Germany NorthEast",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "lg"
+    ]
+  },
+  "germanywestcentral": {
+    "meterRegion": "DE West Central",
+    "displayName": "Germany West Central",
+    "armLocationAliases": [
+      "germanywc",
+      "germanywcentral"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "dewc",
+      "dewestcentral",
+      "dwc"
+    ]
+  },
+  "global": {
+    "meterRegion": null,
+    "displayName": "Global",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "all regions",
+      "non regional",
+      "unassigned"
+    ]
+  },
+  "greececentral": {
+    "meterRegion": "GR Central",
+    "displayName": "Greece Central",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "indonesiacentral": {
+    "meterRegion": "ID Central",
+    "displayName": "Indonesia Central",
+    "armLocationAliases": [
+      "indonesiac"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "idc"
+    ]
+  },
+  "israelcentral": {
+    "meterRegion": "IL Central",
+    "displayName": "Israel Central",
+    "armLocationAliases": [
+      "israelc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "ilc"
+    ]
+  },
+  "italynorth": {
+    "meterRegion": "IT North",
+    "displayName": "Italy North",
+    "armLocationAliases": [
+      "italyn",
+      "itn"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "japan": {
+    "meterRegion": null,
+    "displayName": "Japan",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "japaneast": {
+    "meterRegion": "JA East",
+    "displayName": "Japan East",
+    "armLocationAliases": [
+      "eastjapan",
+      "jaeast",
+      "japan_east",
+      "tokyo, saitama"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "jpe",
+      "tokyo",
+      "ty"
+    ]
+  },
+  "japanwest": {
+    "meterRegion": "JA West",
+    "displayName": "Japan West",
+    "armLocationAliases": [
+      "jawest"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "jpw",
+      "os",
+      "osaka"
+    ]
+  },
+  "jioindiacentral": {
+    "meterRegion": "IN Central Jio",
+    "displayName": "Jio India Central",
+    "armLocationAliases": [
+      "jinc",
+      "jioinc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "jioindiawest": {
+    "meterRegion": "IN West Jio",
+    "displayName": "Jio India West",
+    "armLocationAliases": [
+      "jinw",
+      "jioinw"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "koreacentral": {
+    "meterRegion": "KR Central",
+    "displayName": "Korea Central",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "krc",
+      "krcentral",
+      "se"
+    ]
+  },
+  "koreasouth": {
+    "meterRegion": "KR South",
+    "displayName": "Korea South",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "krs",
+      "krsouth",
+      "ps"
+    ]
+  },
+  "malaysiasouth": {
+    "meterRegion": null,
+    "displayName": "Malaysia South",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "malaysiawest": {
+    "meterRegion": "MY West",
+    "displayName": "Malaysia West",
+    "armLocationAliases": [
+      "malaysiaw"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "myw"
+    ]
+  },
+  "mexicocentral": {
+    "meterRegion": "MX Central",
+    "displayName": "Mexico Central",
+    "armLocationAliases": [
+      "mexicoc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "mxc"
+    ]
+  },
+  "newzealandnorth": {
+    "meterRegion": "NZ North",
+    "displayName": "New Zealand North",
+    "armLocationAliases": [
+      "newzealandn",
+      "nzn"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "northcentralus": {
+    "meterRegion": "US North Central",
+    "displayName": "North Central US",
+    "armLocationAliases": [
+      "ncus",
+      "usnorth",
+      "usnorthcentral"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "ch",
+      "chicago",
+      "illinois"
+    ]
+  },
+  "northeurope": {
+    "meterRegion": "EU North",
+    "displayName": "North Europe",
+    "armLocationAliases": [
+      "eunorth",
+      "europenorth",
+      "ne",
+      "neu",
+      "north_europe"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "db",
+      "dublin",
+      "ireland"
+    ]
+  },
+  "norwayeast": {
+    "meterRegion": "NO East",
+    "displayName": "Norway East",
+    "armLocationAliases": [
+      "noe",
+      "noeast",
+      "norwaye"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "norwaywest": {
+    "meterRegion": "NO West",
+    "displayName": "Norway West",
+    "armLocationAliases": [
+      "norwayw",
+      "now"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "polandcentral": {
+    "meterRegion": "PL Central",
+    "displayName": "Poland Central",
+    "armLocationAliases": [
+      "polandc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "plc"
+    ]
+  },
+  "qatarcentral": {
+    "meterRegion": "QA Central",
+    "displayName": "Qatar Central",
+    "armLocationAliases": [
+      "qac",
+      "qatarc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "qatarentral"
+    ]
+  },
+  "saudiarabiaeast": {
+    "meterRegion": "SA East",
+    "displayName": "Saudi Arabia East",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "singaporecentral": {
+    "meterRegion": null,
+    "displayName": "Singapore Central",
+    "armLocationAliases": [
+      "singaporec",
+      "singc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "southafricanorth": {
+    "meterRegion": "ZA North",
+    "displayName": "South Africa North",
+    "armLocationAliases": [
+      "san",
+      "sanorth",
+      "southafrican"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "jnb",
+      "johannesburg",
+      "zanorth"
+    ]
+  },
+  "southafricawest": {
+    "meterRegion": "ZA West",
+    "displayName": "South Africa West",
+    "armLocationAliases": [
+      "sawest",
+      "southafricaw"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cpt",
+      "zawest"
+    ]
+  },
+  "southcentralindia": {
+    "meterRegion": "IN South Central",
+    "displayName": "India South Central",
+    "armLocationAliases": [
+      "indiasc",
+      "indiasouthcentral",
+      "insc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "southcentralus": {
+    "meterRegion": "US South Central",
+    "displayName": "South Central US",
+    "armLocationAliases": [
+      "scus",
+      "ussouth",
+      "ussouthcentral"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "sanantonio",
+      "sn",
+      "texas"
+    ]
+  },
+  "southcentralus2": {
+    "meterRegion": null,
+    "displayName": "South Central US 2",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "southcentralusstg": {
+    "meterRegion": null,
+    "displayName": "South Central US STG",
+    "armLocationAliases": [
+      "ustsc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "usstagesc"
+    ]
+  },
+  "southeastasia": {
+    "meterRegion": "AP Southeast",
+    "displayName": "Southeast Asia",
+    "armLocationAliases": [
+      "asiasoutheast",
+      "south east asia",
+      "southeast_asia"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "apsoutheast",
+      "sea",
+      "seas",
+      "sg",
+      "singapore",
+      "southsoutheastasia"
+    ]
+  },
+  "southeastus": {
+    "meterRegion": null,
+    "displayName": "Southeast US",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "southindia": {
+    "meterRegion": "IN South",
+    "displayName": "South India",
+    "armLocationAliases": [
+      "indiasouth",
+      "ins",
+      "insouth",
+      "sin"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "ma"
+    ]
+  },
+  "spaincentral": {
+    "meterRegion": "ES Central",
+    "displayName": "Spain Central",
+    "armLocationAliases": [
+      "spainc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "esc"
+    ]
+  },
+  "swedencentral": {
+    "meterRegion": "SE Central",
+    "displayName": "Sweden Central",
+    "armLocationAliases": [
+      "swedenc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "sec"
+    ]
+  },
+  "swedensouth": {
+    "meterRegion": "SE South",
+    "displayName": "Sweden South",
+    "armLocationAliases": [
+      "swedens"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "ses"
+    ]
+  },
+  "switzerlandnorth": {
+    "meterRegion": "CH North",
+    "displayName": "Switzerland North",
+    "armLocationAliases": [
+      "switzerlandn"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "chn"
+    ]
+  },
+  "switzerlandwest": {
+    "meterRegion": "CH West",
+    "displayName": "Switzerland West",
+    "armLocationAliases": [
+      "switzerlandw"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "chw"
+    ]
+  },
+  "taiwannorth": {
+    "meterRegion": "TW North",
+    "displayName": "Taiwan North",
+    "armLocationAliases": [
+      "taiwann"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "twn"
+    ]
+  },
+  "taiwannorthwest": {
+    "meterRegion": null,
+    "displayName": "Taiwan Northwest",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "uaecentral": {
+    "meterRegion": "AE Central",
+    "displayName": "UAE Central",
+    "armLocationAliases": [
+      "uaec"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "auh"
+    ]
+  },
+  "uaenorth": {
+    "meterRegion": "AE North",
+    "displayName": "UAE North",
+    "armLocationAliases": [
+      "uaen"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "aen",
+      "aenorth",
+      "dubai",
+      "dxb"
+    ]
+  },
+  "uknorth": {
+    "meterRegion": "UK North",
+    "displayName": "UK North",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "mm"
+    ]
+  },
+  "uksouth": {
+    "meterRegion": "UK South",
+    "displayName": "UK South",
+    "armLocationAliases": [
+      "uks"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "gbs",
+      "ln",
+      "london",
+      "unitedkingdomsouth",
+      "unitedkingdomsouth2"
+    ]
+  },
+  "uksouth2": {
+    "meterRegion": "UK South 2",
+    "displayName": "UK South 2",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "lo"
+    ]
+  },
+  "ukwest": {
+    "meterRegion": "UK West",
+    "displayName": "UK West",
+    "armLocationAliases": [
+      "ukw"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cw",
+      "cardiff"
+    ]
+  },
+  "unitedstates": {
+    "meterRegion": null,
+    "displayName": "United States",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "usdodcentral": {
+    "meterRegion": "US Dod Central",
+    "displayName": "USDoD Central",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "dd"
+    ]
+  },
+  "usdodeast": {
+    "meterRegion": "US Dod East",
+    "displayName": "USDoD East",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "bd"
+    ]
+  },
+  "useast2euap": {
+    "meterRegion": null,
+    "displayName": "US East 2 EUAP",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "usgovarizona": {
+    "meterRegion": "US Gov Az",
+    "displayName": "USGov Arizona",
+    "armLocationAliases": [
+      "usa"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "phx",
+      "usgovaz",
+      "usgovsouthwest",
+      "usgovsw",
+      "ussgovarizona"
+    ]
+  },
+  "usgoviowa": {
+    "meterRegion": "US Gov Iowa",
+    "displayName": "USGov Iowa",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "usgovcentral"
+    ]
+  },
+  "usgovtexas": {
+    "meterRegion": "US Gov Tx",
+    "displayName": "USGov Texas",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "usgov south central",
+      "usgovsc",
+      "usgovsouthcentral",
+      "usgovtx"
+    ]
+  },
+  "usgovvirginia": {
+    "meterRegion": "US Gov Virginia",
+    "displayName": "USGov Virginia",
+    "armLocationAliases": [
+      "usv"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "usgoveast"
+    ]
+  },
+  "usgovwyoming": {
+    "meterRegion": null,
+    "displayName": "USGov Wyoming",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "usgovwc"
+    ]
+  },
+  "usseceast": {
+    "meterRegion": "US Sec East",
+    "displayName": "USSec East",
+    "armLocationAliases": [
+      "usse",
+      "ussece"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "ussecwest": {
+    "meterRegion": "US Sec West",
+    "displayName": "USSec West",
+    "armLocationAliases": [
+      "ussecw",
+      "ussw"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "ussecwestcentral": {
+    "meterRegion": "US Sec West Central",
+    "displayName": "USSec West Central",
+    "armLocationAliases": [
+      "ussecwc",
+      "usswc"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  },
+  "ussouthcentral": {
+    "meterRegion": null,
+    "displayName": "US South Central",
+    "armLocationAliases": [],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "dallas"
+    ]
+  },
+  "westcentralus": {
+    "meterRegion": "US West Central",
+    "displayName": "West Central US",
+    "armLocationAliases": [
+      "uswestcentral",
+      "wcu",
+      "wcus"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "cy"
+    ]
+  },
+  "westeurope": {
+    "meterRegion": "EU West",
+    "displayName": "West Europe",
+    "armLocationAliases": [
+      "europewest",
+      "euwest",
+      "we",
+      "west_europe",
+      "weu"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "am",
+      "am2",
+      "amsterdam",
+      "netherlands"
+    ]
+  },
+  "westindia": {
+    "meterRegion": "IN West",
+    "displayName": "West India",
+    "armLocationAliases": [
+      "indiawest",
+      "inw",
+      "inwest"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "bm",
+      "mumbai",
+      "mumbai2"
+    ]
+  },
+  "westus": {
+    "meterRegion": "US West",
+    "displayName": "West US",
+    "armLocationAliases": [
+      "us_west",
+      "uswest",
+      "wu",
+      "wus"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "by",
+      "silicon valley",
+      "siliconvalley",
+      "california"
+    ]
+  },
+  "westus2": {
+    "meterRegion": "US West 2",
+    "displayName": "West US 2",
+    "armLocationAliases": [
+      "uswest2",
+      "wu2",
+      "wus2"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": [
+      "mwh",
+      "seattle"
+    ]
+  },
+  "westus3": {
+    "meterRegion": "US West 3",
+    "displayName": "West US 3",
+    "armLocationAliases": [
+      "usw3",
+      "uswest3",
+      "wus3"
+    ],
+    "meterRegionAliases": [],
+    "otherAliases": []
+  }
+}
