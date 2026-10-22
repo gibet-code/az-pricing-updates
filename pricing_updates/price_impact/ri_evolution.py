@@ -26,6 +26,8 @@ class PriceEvolutionResult:
     horizon_months: int
     fiscal_year_start_month: int
     price_protection_enabled: bool
+    # The dashboard hides the Business entity filter when no mapping was added.
+    business_entity_provided: bool = True
 
 
 PRICE_EVOLUTION_EFFECTIVE_MONTH = pd.Timestamp("2027-02-01")
@@ -902,4 +904,5 @@ def build_price_evolution(
         horizon_months=horizon_months,
         fiscal_year_start_month=fiscal_year_start_month,
         price_protection_enabled=price_protection_enabled,
+        business_entity_provided="BusinessEntity" in ri_report.columns,
     )

@@ -709,6 +709,11 @@ def _write_price_evolution_dashboard(
             "All",
         ),
     ]
+    if not result.business_entity_provided:
+        selector_definitions = [
+            definition for definition in selector_definitions
+            if definition[0] != "BusinessEntity"
+        ]
     chart_ranges = _price_evolution_column_ranges(
         result.chart_data,
         "RI Evolution Chart Data",

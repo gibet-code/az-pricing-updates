@@ -4,3 +4,4 @@ azure-mgmt-resourcegraph
 openpyxl
 pandas
 pyarrow
+requests

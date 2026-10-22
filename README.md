@@ -66,7 +66,8 @@ is still possible:
 
 - Python 3.10 or newer, and Git (or download the repository as a ZIP).
 - Azure CLI ([install guide](https://learn.microsoft.com/cli/azure/install-azure-cli)),
-  only for `--business-entity-method` (see [Parameters](#parameters)).
+  only for `--business-entity-method` (see [Parameters](#parameters)) and for the
+  optional pricesheet download script (see the note below the inputs table).
 - Billing exports from your own tenant:
 
 | Input | Required | Content | Where to find it |
@@ -74,6 +75,27 @@ is still possible:
 | Usage details | Always | EA or MCA **amortized cost** usage for a full calendar month, CSV or Parquet (file, folder or glob). | Azure Cost Management + Billing > Billing scopes > EA billing account or MCA Billing Profile > For MCA create an amortized usage report, For EA you can download it from Invoice pane (choose amortized) |
 | Pricesheet | With `--price-protection` or `--ri-price-evolution` | CSV or Parquet. Its contract type (EA or MCA) must match the usage | Azure Cost Management + Billing > Billing scopes > EA billing account or MCA Billing Profile > Invoices > Download Azure pricesheet |
 | Reservation inventory | With `--ri-price-evolution` | CSV with `Reservation Id`, `Reservation order Id`, `Purchase date`, `Expiration date`, `Product name` | Azure Cost Management + Billing > Billing scopes > EA billing account or MCA Billing Profile > Reservations > Export to CSV |
+
+> **Downloading the pricesheet from the command line.** For convenience, instead
+> of downloading the pricesheet from the portal you can use
+> `scripts.download_pricesheet`. It signs in through your Azure CLI session
+> (`az login`), requests the latest available billing period for an EA billing
+> account, or the current month for an MCA billing profile, waits until Azure has
+> generated it, and saves a ZIP of CSV files. Extract the ZIP and pass the
+> extracted folder as `--pricesheet`. Your identity needs at least **Enterprise Admin
+> Reader** on the EA billing account, or **Billing Profile Reader** on the MCA
+> billing profile.
+>
+> ```powershell
+> # EA
+> python -m scripts.download_pricesheet --ea-billing-account-id "<billing-account-id>" --output ".\inputs\pricesheet.zip"
+> # MCA (both IDs are required; the billing profile ID is the short ID, such as ABCD-EFGH-BG7-PGB)
+> python -m scripts.download_pricesheet --mca-billing-account-id "<billing-account-id>" --mca-billing-profile-id "<billing-profile-id>" --output ".\inputs\pricesheet.zip"
+> # No IDs: lists the EA accounts and MCA billing profiles you can access, then asks you to pick one
+> python -m scripts.download_pricesheet --output ".\inputs\pricesheet.zip"
+> ```
+>
+> A similar script to download the usage details will come soon.
 
 ## Installation
 
@@ -135,7 +157,7 @@ python -m pricing_updates.impact_report ".\inputs\usage.parquet" --output ".\rep
 | `--ri-price-evolution` | No | `--pricesheet`, `--reservation-inventory`, VM reservation usage | No | Adds the RI forecast tabs |
 | `--ri-price-evolution-horizon-months` | No (18) | `--ri-price-evolution` | No | Number of forecast months, at least 1 |
 | `--ri-price-evolution-fiscal-year-start-month` | No (1) | `--ri-price-evolution` | No | First month of the forecast fiscal year, 1 to 12 |
-| `--business-entity-method` | No | | **Yes** | Adds `BusinessEntity` from `ea_department_name` or `management_group_hierarchy_level_0` to `_6`; missing values are `Unknown` |
+| `--business-entity-method` | No | | **Yes** | Adds `BusinessEntity` from `ea_department_name` or `management_group_hierarchy_level_0` to `_6`; missing values are `Unknown`. The RI Price Evolution dashboard shows its Business entity filter only when this is set |
 | `--cache-dir` | No | | No | Reuses parsed inputs between runs (see [Azure login and caching](#azure-login-and-caching)) |
 | `--keep-no-impact-details` | No | | No | Keeps non-impacting rows in the Storage and Virtual Machines tabs; by default only impacted rows are exported |
 
