@@ -17,8 +17,7 @@ with optional price protection and Reserved Instance forecasting.
 > terms before using them for budgeting, forecasting or commercial decisions.
 > They do not replace official Microsoft pricing communications.
 
-This repository is generated from the `az-toolbox` source repository; local
-edits to managed files are overwritten when it is republished. The entry point
+The entry point
 is `pricing_updates.impact_report`; the modules under `core` are included
 dependencies, not separate tools.
 
@@ -52,8 +51,7 @@ These increases apply to pay-as-you-go, Enterprise Agreement and Microsoft
 Customer Agreement rates. Existing Reserved Instances (RIs) are not affected
 until they expire, and savings plans follow the updated VM rates.
 
-**VM series retirement dates.** Retirements are not price increases and are not
-calculated, but the RI forecast uses them to decide whether a new commitment
+**VM series retirement dates for reference.** The RI forecast uses them to decide whether a new commitment
 is still possible:
 
 | Series | Retirement date | Announcement |
@@ -73,9 +71,9 @@ is still possible:
 
 | Input | Required | Content | Where to find it |
 | --- | --- | --- | --- |
-| Usage details | Always | EA or MCA **amortized cost** usage for a full calendar month, CSV or Parquet (file, folder or glob), in a single pricing currency. Without Purchase/Refund rows when a reservation inventory is used | Azure Cost Management > Exports (or a Cost analysis download) |
-| Pricesheet | With `--price-protection` or `--ri-price-evolution` | CSV or Parquet. Its contract type (EA or MCA) must match the usage | EA: Azure portal > Cost Management + Billing > billing scope > Price sheet (download CSV). MCA: Billing profile > Azure Price sheet download |
-| Reservation inventory | With `--ri-price-evolution` | CSV with `Reservation Id`, `Reservation order Id`, `Purchase date`, `Expiration date`, `Product name` | Azure portal > Reservations > Export to CSV |
+| Usage details | Always | EA or MCA **amortized cost** usage for a full calendar month, CSV or Parquet (file, folder or glob). | Azure Cost Management + Billing > Billing scopes > EA billing account or MCA Billing Profile > For MCA create an amortized usage report, For EA you can download it from Invoice pane (choose amortized) |
+| Pricesheet | With `--price-protection` or `--ri-price-evolution` | CSV or Parquet. Its contract type (EA or MCA) must match the usage | Azure Cost Management + Billing > Billing scopes > EA billing account or MCA Billing Profile > Invoices > Download Azure pricesheet |
+| Reservation inventory | With `--ri-price-evolution` | CSV with `Reservation Id`, `Reservation order Id`, `Purchase date`, `Expiration date`, `Product name` | Azure Cost Management + Billing > Billing scopes > EA billing account or MCA Billing Profile > Reservations > Export to CSV |
 
 ## Installation
 
