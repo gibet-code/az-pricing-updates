@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 import re
+from dataclasses import dataclass
+from datetime import date
 from enum import Enum
 from typing import Literal
 
@@ -295,13 +297,100 @@ RESERVABLE_AZURE_NETAPP_FILES_METER_NAMES = (
 RESERVABLE_STORAGE_TERMS = ("P1Y", "P3Y")
 
 
-LEGACY_PRICE_UPDATE_VM_PATTERN = re.compile(
-    r"^(?:virtual machines )?"
-    r"(?:bs(?: vdi)?|d(?:/ds)?|ds|f(?:/fs)?|fs|g(?:/gs)?|gs|"
-    r"ls|np|hcs|av2|amv2|dv2(?:/dsv2)?|dsv2|fsv2|lsv2)"
-    r"(?: promo)? series(?:\b.*)?$",
-    re.IGNORECASE,
+@dataclass(frozen=True)
+class VmSeriesRetirement:
+    """A VM series named in the announcements, with its retirement date.
+
+    ``tokens`` is a regex alternation matched against the lower-cased series
+    name (MeterSubCategory, or Product when empty), so the same table drives the
+    v1/v2 price increase, the VM family and the retirement date.
+    """
+
+    family: str
+    tokens: str
+    retirement_date: date
+    announcement: str
+    price_update: bool
+
+
+# Series are listed once; patterns must not overlap (covered by tests).
+# ``price_update`` marks the v1/v2 series of the 25% price increase; the v3
+# series are only listed for their retirement date.
+VM_SERIES_RETIREMENTS = (
+    # Azure update 485569
+    VmSeriesRetirement("D/Ds", r"d(?:/ds)?|ds", date(2028, 5, 1), "485569", True),
+    VmSeriesRetirement("Dv2/Dsv2", r"dv2(?:/dsv2)?|dsv2", date(2028, 5, 1), "485569", True),
+    VmSeriesRetirement("Ls", r"ls", date(2028, 5, 1), "485569", True),
+    # Azure update 500682
+    VmSeriesRetirement("F/Fs", r"f(?:/fs)?|fs", date(2028, 11, 15), "500682", True),
+    VmSeriesRetirement("Fsv2", r"fsv2", date(2028, 11, 15), "500682", True),
+    VmSeriesRetirement("Lsv2", r"lsv2", date(2028, 11, 15), "500682", True),
+    VmSeriesRetirement("G/Gs", r"g(?:/gs)?|gs", date(2028, 11, 15), "500682", True),
+    VmSeriesRetirement("Av2", r"av2", date(2028, 11, 15), "500682", True),
+    VmSeriesRetirement("Amv2", r"amv2", date(2028, 11, 15), "500682", True),
+    VmSeriesRetirement("Bs", r"bs(?: vdi)?", date(2028, 11, 15), "500682", True),
+    # Azure update 548497 (NP) and 548543 (HC, named HCS in meters)
+    VmSeriesRetirement("NP", r"np", date(2027, 5, 31), "548497", True),
+    VmSeriesRetirement("HC", r"hcs", date(2027, 5, 31), "548543", True),
+    # Azure update 572346 (retirement only, no price increase)
+    VmSeriesRetirement(
+        "Dv3/Dsv3", r"dv3(?:/dsv3)?(?: vdi)?|dsv3", date(2029, 11, 15), "572346", False,
+    ),
+    VmSeriesRetirement("Ev3/Esv3", r"ev3(?:/esv3)?|esv3", date(2029, 11, 15), "572346", False),
 )
+
+
+def _vm_series_pattern(tokens: str) -> re.Pattern[str]:
+    return re.compile(
+        r"^(?:virtual machines )?"
+        rf"(?:{tokens})"
+        r"(?: promo)? series(?:\b.*)?$",
+        re.IGNORECASE,
+    )
+
+
+_VM_SERIES_PATTERNS = tuple(
+    (entry, _vm_series_pattern(entry.tokens)) for entry in VM_SERIES_RETIREMENTS
+)
+
+
+# Series of the v1/v2 price increase.
+LEGACY_PRICE_UPDATE_VM_PATTERN = _vm_series_pattern(
+    "|".join(
+        entry.tokens for entry in VM_SERIES_RETIREMENTS if entry.price_update
+    )
+)
+
+
+def classify_vm_series(values: pd.Series) -> pd.DataFrame:
+    """Return VMFamily, RetirementDate and the v1/v2 flag for series names."""
+    matches: dict[str, VmSeriesRetirement] = {}
+    for value in values.dropna().unique():
+        for entry, pattern in _VM_SERIES_PATTERNS:
+            if pattern.fullmatch(str(value)):
+                matches[value] = entry
+                break
+    return pd.DataFrame(
+        {
+            "VMFamily": values.map(
+                {key: entry.family for key, entry in matches.items()}
+            ).astype("string"),
+            "RetirementDate": pd.to_datetime(
+                values.map(
+                    {
+                        key: pd.Timestamp(entry.retirement_date)
+                        for key, entry in matches.items()
+                    }
+                )
+            ),
+            "LegacyPriceUpdate": values.map(
+                {key: entry.price_update for key, entry in matches.items()}
+            )
+            .astype("boolean")
+            .fillna(False),
+        },
+        index=values.index,
+    )
 
 
 EXCLUDED_REGION_PRICE_UPDATE_VM_PATTERN = re.compile(
@@ -606,13 +695,14 @@ def add_vm_impact_result(report: pd.DataFrame) -> pd.DataFrame:
         meter_subcategory.eq("")
     ).fillna(product.mask(product.eq("")))
     has_classification = classification_value.notna()
-    is_legacy = classification_value.str.fullmatch(
-        LEGACY_PRICE_UPDATE_VM_PATTERN
-    ).fillna(False)
+    series = classify_vm_series(classification_value)
+    is_legacy = series["LegacyPriceUpdate"].astype(bool)
     is_excluded_region = classification_value.str.fullmatch(
         EXCLUDED_REGION_PRICE_UPDATE_VM_PATTERN
     ).fillna(False)
 
+    report["VMFamily"] = series["VMFamily"]
+    report["RetirementDate"] = series["RetirementDate"]
     report["NotExcludedRegionPriceUpdate"] = (
         has_classification & ~is_excluded_region
     ).map({True: "Yes", False: "No"})

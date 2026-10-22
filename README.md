@@ -66,7 +66,7 @@ is still possible:
 
 - Python 3.10 or newer, and Git (or download the repository as a ZIP).
 - Azure CLI ([install guide](https://learn.microsoft.com/cli/azure/install-azure-cli)),
-  only for the parameters marked "az login" in [Parameters](#parameters).
+  only for `--business-entity-method` (see [Parameters](#parameters)).
 - Billing exports from your own tenant:
 
 | Input | Required | Content | Where to find it |
@@ -132,7 +132,7 @@ python -m pricing_updates.impact_report ".\inputs\usage.parquet" --output ".\rep
 | `--pricesheet` | No | | No | Adds the Storage/VM pricesheet tabs and the pricesheet metadata block |
 | `--price-protection` | No | `--pricesheet` | No | Caps the increased PAYG price at the pricesheet `BasePrice` (EA or MCA, detected from the usage) |
 | `--reservation-inventory` | No | Amortized usage | No | Adds the Reservations tab and fills reservation purchase/expiration dates and VM size |
-| `--ri-price-evolution` | No | `--pricesheet`, `--reservation-inventory`, VM reservation usage | Only if no cached lifecycle snapshot | Adds the RI forecast tabs |
+| `--ri-price-evolution` | No | `--pricesheet`, `--reservation-inventory`, VM reservation usage | No | Adds the RI forecast tabs |
 | `--ri-price-evolution-horizon-months` | No (18) | `--ri-price-evolution` | No | Number of forecast months, at least 1 |
 | `--ri-price-evolution-fiscal-year-start-month` | No (1) | `--ri-price-evolution` | No | First month of the forecast fiscal year, 1 to 12 |
 | `--business-entity-method` | No | | **Yes** | Adds `BusinessEntity` from `ea_department_name` or `management_group_hierarchy_level_0` to `_6`; missing values are `Unknown` |
@@ -170,7 +170,8 @@ the pricing currency over the exported usage period. A row is classified as
 | Regional percentages | Usage `MeterRegion` is translated to the region codes `EU West`, `EU North`, `FR Central`, `FR South`, `NO East`, `NO West` and `AP Southeast`, each with its announced percentage. Rows without a meter region or in other regions have no regional impact | `PRICE_INCREASE_BY_REGION` in `pricing_updates/price_impact/impact.py`; `core/region_translation` |
 | Regional update, Storage | Usage with meter category `Storage` or `Azure NetApp Files` in an impacted region, except the announced exclusions. They are matched on the meter sub-category (see the naming table below), plus Azure NetApp Files meters whose name contains Cross Region Replication | `add_storage_impact_result`, `EXCLUDED_STORAGE_METER_SUBCATEGORIES` |
 | Regional update, VMs | Usage with meter category `Virtual Machines` in an impacted region. The series comes from the meter sub-category (or the product when empty). v7 series Dsv7, Ddsv7, Dlsv7, Dldsv7, Esv7 and Edsv7 are excluded | `add_vm_impact_result` |
-| Legacy v1/v2 VM increase | Series matching Bs, D/Ds, F/Fs, G/Gs, Ls, NP, HCS, Av2, Amv2, Dv2/Dsv2, Fsv2 or Lsv2 (promo variants included) get 25% in every region. This takes precedence over the regional update; the two never stack | `LEGACY_PRICE_UPDATE_VM_PATTERN` |
+| Legacy v1/v2 VM increase | Series matching Bs, D/Ds, F/Fs, G/Gs, Ls, NP, HCS, Av2, Amv2, Dv2/Dsv2, Fsv2 or Lsv2 (promo variants included) get 25% in every region. This takes precedence over the regional update; the two never stack | `VM_SERIES_RETIREMENTS`, `LEGACY_PRICE_UPDATE_VM_PATTERN` |
+| VM family and retirement date | The same series table gives each VM row its family (for example `Dv2/Dsv2`) and retirement date, written to the `VMFamily` and `RetirementDate` columns of the Virtual Machines tab. It also lists the retirement-only series Dv3/Dsv3 and Ev3/Esv3 (no price increase). Other series stay blank | `VM_SERIES_RETIREMENTS`, `classify_vm_series` |
 | Pricing models | OnDemand usage gets the percentage. Spot and Savings Plan are described below. Reservation rows are calculated in the detail tabs but excluded from the Non-RI summary | `build_impact_summaries` |
 | Existing RIs unchanged until expiry | Handled by the RI forecast, below | `pricing_updates/price_impact/ri_evolution.py` |
 | Price protection (optional, not part of the announcement) | For OnDemand usage, the increased unit price is capped at the pricesheet `BasePrice` converted to the usage unit. EA uses the highest matching `BasePrice` of the meter and offer; MCA uses the highest for an Azure plan and the lowest otherwise | `_apply_price_protection` |
@@ -224,12 +225,13 @@ available option of the selected fallback chain (`RI 3Y` then `SP 3Y` then
 multiplied by the announced percentage when the price applies on or after
 1 February 2027. `RI 3Y` is unavailable when it would start within 3 years of
 the VM series retirement, and `SP 3Y` when it would start on or after it. After
-retirement, the last known PAYG price is assumed to continue. Without an
-announced retirement, the VM is assumed to continue indefinitely.
+retirement, the last known PAYG price is assumed to continue. A series that is
+not in the retirement table is assumed to continue indefinitely.
 
-**Retirement dates.** They come from the compute SKU API (`RetirementDateUtc`),
-with the announcements in the table above as a curated fallback in
-`core/compute_skus.py`.
+**Retirement dates.** They are derived from the VM series name with the table
+described above, so no Azure call is needed. The dates come from the
+announcements listed in the scope section; a new announcement requires updating
+the table in `pricing_updates/price_impact/impact.py`.
 
 ## Limitations
 
@@ -250,6 +252,10 @@ Read the figures as indicative estimates, keeping these points in mind:
   and treats the usage as a constant reference month. Other reservations, such
   as Storage reserved capacity, are excluded from the Non-RI summary and are
   not forecast.
+- Retirement dates exist only for the series named in the announcements
+  (v1/v2, Dv3/Dsv3 and Ev3/Esv3). Other series are assumed to continue
+  indefinitely, and a size with an individual earlier retirement date is not
+  distinguished from its series.
 - Only the 28 September 2026 announcement is modeled.
 
 ## Workbook
@@ -258,13 +264,13 @@ Read the figures as indicative estimates, keeping these points in mind:
 | --- | --- | --- |
 | Non-RI Pricing Impact | Always | Usage metadata, pricesheet metadata (pricesheet supplied), overall impact per non-RI pricing model, and impact by business entity (when enabled) and subscription. The entity/subscription sections are formulas over the Storage and Virtual Machines tables, with a pricing-model drop-down (default All; Reservation is always excluded) |
 | Storage | Always | Classified Storage/NetApp Files usage and calculated impact, as Excel table `StorageData` |
-| Virtual Machines | Always | Classified VM usage and calculated impact, as Excel table `VirtualMachinesData` |
+| Virtual Machines | Always | Classified VM usage and calculated impact, with `VMFamily` and `RetirementDate` for the series named in the announcements, as Excel table `VirtualMachinesData` |
 | Reservations | Inventory supplied | All inventory records, without internal matching fields or the deep-link column |
 | Storage Pricesheet | Pricesheet supplied | Matching Storage/NetApp Files prices |
 | VM Pricesheet | Pricesheet supplied | Matching VM prices, including the full VM scope needed for forecasting |
 | RI Price Evolution | Forecasting enabled | Monthly dashboard, filters and chart; placed after Non-RI Pricing Impact |
 | RI Projection Details | Forecasting enabled | Monthly aggregated projections by fallback and reporting dimensions |
-| RI Evolution Assumptions | Forecasting enabled | Forecast assumptions and lifecycle provenance |
+| RI Evolution Assumptions | Forecasting enabled | Forecast assumptions and the retirement dates used |
 | RI Evolution Chart Data | Forecasting enabled, hidden | Dashboard chart source |
 | RI Evolution Lists | Forecasting enabled, hidden | Selector values and named ranges |
 
@@ -289,22 +295,17 @@ regional and v1-v2 price updates.
 ## Azure login and caching
 
 **Data stays local.** The usage, pricesheet and reservation files are processed
-on your machine and nothing is uploaded. Azure is contacted only by the
-`az login` features below.
+on your machine and nothing is uploaded. Azure is contacted only by
+`--business-entity-method`.
 
-**Azure login.** Run `az login` only when a live Azure call is needed:
-`--business-entity-method`, and `--ri-price-evolution` when no VM lifecycle
-snapshot exists yet (retirement data is read from the compute SKU API, so the
-identity must see at least one subscription). Everything else works offline
-on your files.
+**Azure login.** Run `az login` only for `--business-entity-method`, which reads
+management groups or the EA department live. Everything else, including the RI
+forecast, works offline on your files.
 
-**Caching.** Off by default. `--cache-dir` stores the parsed usage, the parsed
-pricesheet and, for the RI forecast, the VM lifecycle snapshot
-(`vm-lifecycle.json`). It is useful when you run the script several times on the
-same data with different parameters: large files are not re-read and Azure is
-not queried again. An existing lifecycle snapshot is reused indefinitely;
-delete `vm-lifecycle.json` to refresh it. The reservation inventory and
-business-entity lookups are never cached.
+**Caching.** Off by default. `--cache-dir` stores the parsed usage and the
+parsed pricesheet. It is useful when you run the script several times on the
+same data with different parameters: large files are not re-read. The
+reservation inventory and business-entity lookups are never cached.
 
 ## License
 

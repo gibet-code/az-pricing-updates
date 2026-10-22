@@ -1,28 +1,23 @@
-"""Collect and validate pricing-report inputs from files, caches and Azure."""
+"""Collect and validate pricing-report inputs from files and Azure."""
 
 from __future__ import annotations
 
-import json
 import logging
-from collections.abc import Callable
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 import pandas as pd
 
 from core._sources_common import ColumnFilter
 from core.business_entity import get_business_entity_mapping
-from core.compute_skus import get_compute_sku_availability
 from core.pricesheet import PricesheetMetadata, load_pricesheet
-from core.subscriptions import get_subscriptions
 from core.usage_data import (
     UsageMetadata,
     get_contract_type as get_usage_contract_type,
     load_usage_details,
     parse_additional_info,
 )
-from pricing_updates.price_impact import impact, ri_evolution
+from pricing_updates.price_impact import impact
 
 logger = logging.getLogger(__name__)
 
@@ -212,6 +207,15 @@ def load_report_pricesheets(
     return storage_pricesheet, vm_pricesheet, metadata
 
 
+def pricesheets_have_base_prices(*pricesheets: pd.DataFrame) -> bool:
+    """Return whether any selected pricesheet row has a BasePrice value."""
+    return any(
+        "BasePrice" in pricesheet.columns
+        and pd.to_numeric(pricesheet["BasePrice"], errors="coerce").notna().any()
+        for pricesheet in pricesheets
+    )
+
+
 def validate_matching_contract_types(
     usage_metadata: UsageMetadata,
     pricesheet_metadata: PricesheetMetadata,
@@ -259,96 +263,3 @@ def validate_price_protection_contract(
     return normalized
 
 
-def load_vm_lifecycle(
-    vm_report: pd.DataFrame,
-    cache_path: Path | None,
-    *,
-    credential_factory: Callable[[], Any],
-) -> tuple[dict[str, dict[str, str | None]], str, str]:
-    """Reuse the cache before requesting a credential for a live lookup."""
-    vm_sizes = sorted(
-        {
-            str(value).strip()
-            for value in vm_report["VMSize"].dropna()
-            if str(value).strip()
-        },
-        key=str.casefold,
-    )
-    if cache_path is not None and cache_path.exists():
-        logger.info(
-            "[lifecycle] Source: cache %s (%d requested VM sizes)",
-            cache_path.resolve(), len(vm_sizes),
-        )
-        try:
-            payload = json.loads(cache_path.read_text(encoding="utf-8"))
-            lifecycle = payload["skus"]
-            snapshot_date = str(payload["created_at"])
-        except (OSError, json.JSONDecodeError, KeyError, TypeError) as exc:
-            raise ValueError(
-                f"Invalid VM lifecycle cache {cache_path}: {exc}"
-            ) from exc
-        if not isinstance(lifecycle, dict):
-            raise ValueError(
-                f"Invalid VM lifecycle cache {cache_path}: skus must be an "
-                "object."
-            )
-        return lifecycle, f"Cache: {cache_path.resolve()}", snapshot_date
-
-    logger.info(
-        "[lifecycle] Source: live compute-SKU API (%d requested VM sizes)",
-        len(vm_sizes),
-    )
-    credential = credential_factory()
-    subscriptions = get_subscriptions(credential)
-    subscription_ids = [
-        str(subscription.get("id") or "").strip()
-        for subscription in subscriptions
-        if str(subscription.get("id") or "").strip()
-    ]
-    if not subscription_ids:
-        raise ValueError(
-            "Price evolution requires at least one subscription visible to "
-            "the connected identity for the lifecycle lookup."
-        )
-    subscription_id = subscription_ids[0]
-    logger.debug(
-        "[lifecycle] Using subscription %s",
-        subscription_id,
-    )
-    try:
-        # TODO: Migrate to get_compute_skus(include_retirement=True).
-        availability = get_compute_sku_availability(
-            subscription_id,
-            credential,
-            fill_missing=False,
-            include_availability_tier=False,
-        )
-    except Exception as exc:
-        raise RuntimeError(
-            "VM lifecycle lookup failed; price evolution cannot be "
-            "generated."
-        ) from exc
-
-    lifecycle = ri_evolution.build_lifecycle_index(availability)
-    if vm_sizes and not lifecycle:
-        raise RuntimeError(
-            "VM lifecycle lookup returned no SKUs for "
-            f"{len(vm_sizes)} requested VM size(s)."
-        )
-    snapshot_date = datetime.now(timezone.utc).isoformat()
-    if cache_path is not None:
-        cache_path.parent.mkdir(parents=True, exist_ok=True)
-        payload = {
-            "created_at": snapshot_date,
-            "subscription_id": subscription_id,
-            "skus": lifecycle,
-        }
-        cache_path.write_text(
-            json.dumps(payload, indent=2, sort_keys=True),
-            encoding="utf-8",
-        )
-        logger.info(
-            "[lifecycle] Wrote cache %s (%d SKU records)",
-            cache_path.resolve(), len(lifecycle),
-        )
-    return lifecycle, "Live compute-SKU API", snapshot_date

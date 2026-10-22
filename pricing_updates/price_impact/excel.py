@@ -641,10 +641,8 @@ def _write_price_evolution_dashboard(
         month=result.fiscal_year_start_month,
         day=1,
     ).strftime("%B")
-    dashboard["D4"] = "Lifecycle source"
-    dashboard["E4"] = result.lifecycle_source
-    dashboard["D5"] = "Lifecycle snapshot"
-    dashboard["E5"] = result.lifecycle_snapshot_date
+    dashboard["D4"] = "Retirement dates"
+    dashboard["E4"] = "Announced VM series retirements"
 
     selector_definitions = [
         (
@@ -963,8 +961,13 @@ def _write_price_evolution_assumptions(
                 "Retired PAYG",
                 "Last known PAYG price continues as a high-risk assumption",
             ),
-            ("Lifecycle source", result.lifecycle_source),
-            ("Lifecycle snapshot", result.lifecycle_snapshot_date),
+            (
+                "Retirement dates",
+                "Series named in the announcements only: D, Ds, Dv2, Dsv2, Ls "
+                "(1 May 2028); F, Fs, Fsv2, Lsv2, G, Gs, Av2, Amv2, Bs "
+                "(15 Nov 2028); NP, HC (31 May 2027); Dv3, Dsv3, Ev3, Esv3 "
+                "(15 Nov 2029)",
+            ),
             (
                 "PAYG price protection",
                 (

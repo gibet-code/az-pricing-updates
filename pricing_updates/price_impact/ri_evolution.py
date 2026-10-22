@@ -1,4 +1,4 @@
-"""RI lifecycle enrichment and price-evolution calculations."""
+"""RI price-evolution calculations."""
 
 from __future__ import annotations
 
@@ -25,8 +25,6 @@ class PriceEvolutionResult:
     forecast_end: pd.Timestamp
     horizon_months: int
     fiscal_year_start_month: int
-    lifecycle_source: str
-    lifecycle_snapshot_date: str
     price_protection_enabled: bool
 
 
@@ -99,66 +97,6 @@ def _price_evolution_fiscal_period(
     ) + 1
     fiscal_quarter = ((fiscal_month - 1) // 3) + 1
     return f"FY{fiscal_year}", f"Q{fiscal_quarter}", fiscal_month
-
-
-def build_lifecycle_index(
-    availability: dict[str, dict[str, Any]],
-) -> dict[str, dict[str, str | None]]:
-    lifecycle: dict[str, dict[str, str | None]] = {}
-    for location in availability.values():
-        for sku in location.get("skus", []):
-            vm_size = str(sku.get("name") or "").strip()
-            if not vm_size:
-                continue
-            record = {
-                "VMFamily": (
-                    str(sku.get("family"))
-                    if sku.get("family") is not None
-                    else None
-                ),
-                "RetirementStatus": (
-                    str(sku.get("retirement_status"))
-                    if sku.get("retirement_status") is not None
-                    else None
-                ),
-                "RetirementDate": (
-                    str(sku.get("retirement_date"))
-                    if sku.get("retirement_date") is not None
-                    else None
-                ),
-            }
-            key = vm_size.casefold()
-            existing = lifecycle.get(key)
-            if existing is not None and existing != record:
-                raise ValueError(
-                    "Conflicting lifecycle metadata for VM size "
-                    f"{vm_size!r}: {existing!r} and {record!r}."
-                )
-            lifecycle[key] = record
-    return lifecycle
-
-
-def _add_price_evolution_lifecycle(
-    vm_report: pd.DataFrame,
-    lifecycle: dict[str, dict[str, str | None]],
-) -> pd.DataFrame:
-    result = vm_report.copy()
-    records = result["VMSize"].map(
-        lambda value: lifecycle.get(str(value).strip().casefold(), {})
-        if pd.notna(value)
-        else {}
-    )
-    result["VMFamily"] = records.map(
-        lambda record: record.get("VMFamily")
-    ).astype("string")
-    result["RetirementStatus"] = records.map(
-        lambda record: record.get("RetirementStatus")
-    ).astype("string")
-    result["RetirementDate"] = pd.to_datetime(
-        records.map(lambda record: record.get("RetirementDate")),
-        errors="coerce",
-    )
-    return result
 
 
 def _warn_missing_price_evolution_price_types(
@@ -925,18 +863,18 @@ def build_price_evolution(
     vm_pricesheet: pd.DataFrame,
     usage_metadata: UsageMetadata,
     *,
-    lifecycle: dict[str, dict[str, str | None]],
-    lifecycle_source: str,
-    lifecycle_snapshot_date: str,
     horizon_months: int,
     fiscal_year_start_month: int,
     contract_type: Literal["ea", "mca"],
     price_protection_enabled: bool,
 ) -> PriceEvolutionResult:
-    """Build a forecast from selected RI usage and collected lifecycle data."""
-    enriched = _add_price_evolution_lifecycle(ri_report, lifecycle)
+    """Build a forecast from selected RI usage.
+
+    Retirement dates come from the ``RetirementDate`` column that
+    ``impact.add_vm_impact_result`` derives from the VM series.
+    """
     enriched = _add_price_evolution_prices(
-        enriched,
+        ri_report,
         vm_pricesheet,
         contract_type,
     )
@@ -963,7 +901,5 @@ def build_price_evolution(
         forecast_end=forecast_end,
         horizon_months=horizon_months,
         fiscal_year_start_month=fiscal_year_start_month,
-        lifecycle_source=lifecycle_source,
-        lifecycle_snapshot_date=lifecycle_snapshot_date,
         price_protection_enabled=price_protection_enabled,
     )

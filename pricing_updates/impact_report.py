@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
@@ -137,11 +138,9 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--cache-dir",
         type=Path,
         help=(
-            "Optional shared cache directory for usage, pricesheets and VM "
-            "lifecycle data. Caching is disabled by default. Lifecycle data "
-            "is stored in vm-lifecycle.json and reused indefinitely; cached "
-            "forecasts need no Azure credential unless business-entity "
-            "grouping is requested."
+            "Optional shared cache directory for parsed usage and "
+            "pricesheets, reused between runs on the same inputs. Caching "
+            "is disabled by default."
         ),
     )
     parser.add_argument(
@@ -183,6 +182,53 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return args
 
 
+LOG_FORMAT = "[%(levelname)s] %(message)s"
+YELLOW = "\x1b[33m"
+COLOR_RESET = "\x1b[0m"
+
+
+class _WarningColorFormatter(logging.Formatter):
+    """Show warning records in yellow."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        text = super().format(record)
+        if record.levelno == logging.WARNING:
+            return f"{YELLOW}{text}{COLOR_RESET}"
+        return text
+
+
+def _use_color(stream: object) -> bool:
+    """Color only interactive terminals, and honor NO_COLOR."""
+    isatty = getattr(stream, "isatty", None)
+    return bool(isatty and isatty()) and "NO_COLOR" not in os.environ
+
+
+def _enable_windows_ansi() -> None:
+    """Turn on ANSI escape processing for classic Windows consoles."""
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+
+        kernel32 = ctypes.windll.kernel32
+        handle = kernel32.GetStdHandle(-12)  # STD_ERROR_HANDLE
+        mode = ctypes.c_uint32()
+        if kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
+            kernel32.SetConsoleMode(handle, mode.value | 0x0004)
+    except Exception:  # Color is cosmetic; never fail the report for it.
+        pass
+
+
+def _configure_logging() -> None:
+    handler = logging.StreamHandler()
+    if _use_color(handler.stream):
+        _enable_windows_ansi()
+        handler.setFormatter(_WarningColorFormatter(LOG_FORMAT))
+    else:
+        handler.setFormatter(logging.Formatter(LOG_FORMAT))
+    logging.basicConfig(level=logging.INFO, handlers=[handler])
+
+
 @contextmanager
 def _log_phase(phase: str, operation: str) -> Generator[None, None, None]:
     started = perf_counter()
@@ -194,10 +240,7 @@ def _log_phase(phase: str, operation: str) -> Generator[None, None, None]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="[%(levelname)s] %(message)s",
-    )
+    _configure_logging()
     logging.getLogger("azure").setLevel(logging.WARNING)
 
     started = perf_counter()
@@ -367,6 +410,16 @@ def main(argv: list[str] | None = None) -> int:
                 "[pricesheet] Selected %d Storage and %d VM price rows",
                 len(storage_pricesheet_report), len(vm_pricesheet_report),
             )
+            if args.price_protection and not data.pricesheets_have_base_prices(
+                storage_pricesheet_report, vm_pricesheet_report,
+            ):
+                logger.warning(
+                    "[pricesheet] Price protection was requested but no "
+                    "BasePrice value appears in the selected Storage and VM "
+                    "pricesheet rows. Either the pricesheet is incomplete or "
+                    "your agreement does not offer price protection; impacts "
+                    "will be calculated without protection."
+                )
     if args.price_protection:
         with _log_phase("impact", "Applying current-usage price protection"):
             if (
@@ -386,7 +439,6 @@ def main(argv: list[str] | None = None) -> int:
                 vm_pricesheet_report,
                 price_protection_contract_type,
             )
-    lifecycle_data = None
     if ri_report is not None:
         with _log_phase("validate", "Validating RI forecast pricing inputs"):
             if vm_pricesheet_report is None or pricing_contract_type is None:
@@ -405,16 +457,6 @@ def main(argv: list[str] | None = None) -> int:
                     policy=impact.BasePricePolicy.RI_PAYG_FALLBACK,
                     context="RI price evolution",
                 )
-        with _log_phase("lifecycle", "Collecting VM lifecycle data"):
-            lifecycle_data = data.load_vm_lifecycle(
-                ri_report,
-                cache_dir / "vm-lifecycle.json" if cache_dir is not None else None,
-                credential_factory=get_credential,
-            )
-            logger.info(
-                "[lifecycle] Loaded %d SKU records (snapshot %s)",
-                len(lifecycle_data[0]), lifecycle_data[2],
-            )
     if args.business_entity_method is not None:
         with _log_phase(
             "usage",
@@ -439,20 +481,15 @@ def main(argv: list[str] | None = None) -> int:
             if (
                 vm_pricesheet_report is None
                 or pricing_contract_type is None
-                or lifecycle_data is None
             ):
                 raise ValueError(
-                    "RI price evolution requires collected prices, a supported "
-                    "usage contract, and lifecycle data."
+                    "RI price evolution requires collected prices and a "
+                    "supported usage contract."
                 )
-            lifecycle, lifecycle_source, snapshot_date = lifecycle_data
             price_evolution_result = ri_evolution.build_price_evolution(
                 ri_report,
                 vm_pricesheet_report,
                 usage_metadata,
-                lifecycle=lifecycle,
-                lifecycle_source=lifecycle_source,
-                lifecycle_snapshot_date=snapshot_date,
                 horizon_months=getattr(
                     args, "price_evolution_horizon_months", 18,
                 ),

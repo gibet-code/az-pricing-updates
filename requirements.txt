@@ -1,7 +1,5 @@
 azure-core
 azure-identity
-azure-mgmt-compute
-azure-mgmt-resource-subscriptions
 azure-mgmt-resourcegraph
 openpyxl
 pandas
